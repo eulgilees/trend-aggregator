@@ -620,10 +620,16 @@ async function loadItems() {
   renderItems(data.items);
 }
 
+const CATEGORY_ORDER = ['라이프스타일', '트렌드/마케팅', '시사/뉴스', 'IT/스타트업', 'IT/기술'];
+
 async function loadTabs() {
   const res = await fetch('/api/sources');
   const data = await res.json();
   const categories = [...new Set(data.sources.map(s => s.category))];
+  categories.sort((a, b) => {
+    const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+    return (ia === -1 ? CATEGORY_ORDER.length : ia) - (ib === -1 ? CATEGORY_ORDER.length : ib);
+  });
   const all = [{ label: '전체', value: null }, ...categories.map(c => ({ label: c, value: c }))];
   tabsEl.innerHTML = all.map(t => {
     const dot = t.value ? `<span class="tab-dot" style="background:${categoryColors(t.value).border}"></span>` : '';
