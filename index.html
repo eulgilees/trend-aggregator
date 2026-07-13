@@ -6,28 +6,29 @@
 <title>트렌드 모아보기</title>
 <style>
   :root {
-    --bg: #fbf6ee;
+    --bg: #f6f4f0;
     --card: #ffffff;
-    --text: #14121a;
-    --muted: #6b6478;
+    --text: #1a1a1a;
+    --muted: #85807a;
     --accent: #5b3df6;
     --accent2: #ff5da2;
-    --border: #14121a;
+    --border: #e7e3dc;
+    --shadow-sm: 0 1px 2px rgba(20,18,26,0.04);
+    --shadow-md: 0 10px 28px rgba(20,18,26,0.07);
+    --shadow-lg: 0 16px 40px rgba(20,18,26,0.11);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     background: var(--bg);
-    background-image: radial-gradient(rgba(20,18,26,0.06) 1.5px, transparent 1.5px);
-    background-size: 22px 22px;
     color: var(--text);
   }
   html {
     font-size: 16px;
   }
   header {
-    padding: 32px 20px 16px;
+    padding: 40px 20px 20px;
     max-width: clamp(1000px, 92vw, 1600px);
     margin: 0 auto;
   }
@@ -43,19 +44,19 @@
     align-items: center;
     gap: 6px;
     background: var(--card);
-    border: 2.5px solid var(--border);
+    border: 1px solid var(--border);
     border-radius: 999px;
     padding: 5px 8px;
-    box-shadow: 3px 3px 0 var(--border);
+    box-shadow: var(--shadow-sm);
     flex-shrink: 0;
   }
   .font-ctrl button {
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    border: 2px solid var(--border);
+    border: 1px solid var(--border);
     background: var(--card);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 0.75rem;
     cursor: pointer;
     color: var(--text);
@@ -73,88 +74,97 @@
   }
   h1 {
     font-size: 1.875rem;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: -0.5px;
     margin: 0 0 6px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    display: inline-block;
+    color: var(--text);
   }
   .sub {
     color: var(--muted);
     font-size: 0.8125rem;
-    font-weight: 600;
+    font-weight: 500;
   }
   .tabs {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     max-width: clamp(1000px, 92vw, 1600px);
-    margin: 16px auto 0;
+    margin: 20px auto 0;
     padding: 0 20px;
   }
   .tab {
     padding: 8px 16px;
     border-radius: 999px;
-    border: 2.5px solid var(--border);
+    border: 1px solid var(--border);
     background: var(--card);
     font-size: 0.8125rem;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
-    color: var(--text);
+    color: var(--muted);
     white-space: nowrap;
-    box-shadow: 3px 3px 0 var(--border);
-    transition: transform 0.12s, box-shadow 0.12s;
+    transition: border-color 0.12s, color 0.12s, background 0.12s;
   }
   .tab:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 var(--border);
+    border-color: var(--text);
+    color: var(--text);
   }
   .tab.active {
     background: var(--text);
     color: white;
-    border-color: var(--border);
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 var(--border);
+    border-color: var(--text);
   }
   main {
     max-width: clamp(1000px, 92vw, 1600px);
-    margin: 24px auto 60px;
+    margin: 28px auto 60px;
     padding: 0 20px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
   }
   .card {
+    position: relative;
     background: var(--card);
-    border: 2.5px solid var(--border);
-    border-radius: 18px;
-    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px 22px 20px 24px;
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 10px;
     text-decoration: none;
     color: var(--text);
     cursor: pointer;
-    box-shadow: 5px 5px 0 var(--cat-color, var(--border));
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--cat-color, var(--border));
   }
   .card:hover {
-    transform: translate(-3px, -3px) rotate(-0.4deg);
-    box-shadow: 8px 8px 0 var(--cat-color, var(--border));
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
   }
   .category-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     align-self: flex-start;
     font-size: 0.6875rem;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.2px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: var(--cat-color, #eee);
-    color: white;
+    color: var(--muted);
+  }
+  .category-tag .tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background: var(--cat-color, var(--muted));
   }
   .tab-dot {
     display: inline-block;
@@ -172,15 +182,15 @@
     font-weight: 600;
   }
   .card-source {
-    font-weight: 800;
+    font-weight: 700;
     color: var(--text);
   }
   .card-new {
     display: inline-block;
     font-size: 0.625rem;
-    font-weight: 900;
-    color: white;
-    background: var(--accent2);
+    font-weight: 800;
+    color: var(--accent2);
+    background: rgba(255,93,162,0.12);
     padding: 2px 7px;
     border-radius: 999px;
     margin-left: 6px;
@@ -188,7 +198,7 @@
   }
   .card-title {
     font-size: 1rem;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.4;
   }
   .card-summary {
@@ -209,48 +219,60 @@
     grid-column: 1 / -1;
   }
   .banner-card {
+    position: relative;
     grid-column: 1 / -1;
-    background: linear-gradient(120deg, var(--accent), var(--accent2));
-    border: 3px solid var(--border);
+    background: #f1eefc;
+    border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 26px 28px;
-    color: white;
+    padding: 26px 28px 26px 32px;
+    color: var(--text);
     display: flex;
     flex-direction: column;
     gap: 9px;
     cursor: pointer;
-    box-shadow: 6px 6px 0 var(--border);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    overflow: hidden;
+  }
+  .banner-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: var(--accent);
   }
   .banner-card:hover {
-    transform: translate(-3px, -3px) rotate(-0.3deg);
-    box-shadow: 9px 9px 0 var(--border);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
   }
   .banner-tag {
     align-self: flex-start;
     font-size: 0.75rem;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.4px;
-    background: rgba(255,255,255,0.25);
+    background: var(--accent);
+    color: white;
     padding: 4px 12px;
     border-radius: 999px;
   }
   .banner-title {
-    font-size: 1.55rem;
-    font-weight: 900;
-    line-height: 1.35;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.4;
   }
   .banner-reason {
     font-size: 0.875rem;
-    font-weight: 600;
-    opacity: 0.92;
+    font-weight: 500;
+    color: var(--muted);
   }
   .banner-meta {
     display: flex;
     gap: 8px;
     font-size: 0.75rem;
-    font-weight: 700;
-    opacity: 0.85;
+    font-weight: 600;
+    color: var(--muted);
   }
   .overlay {
     display: none;
@@ -271,14 +293,14 @@
   }
   .modal {
     background: var(--card);
-    border: 3px solid var(--border);
-    border-radius: 20px;
-    box-shadow: 8px 8px 0 var(--border);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
     max-width: 640px;
     width: 100%;
     max-height: 85vh;
     overflow-y: auto;
-    padding: 26px;
+    padding: 28px;
     position: relative;
     animation: modalPop 0.18s ease-out;
   }
@@ -286,7 +308,7 @@
     position: absolute;
     top: 14px;
     right: 16px;
-    border: 2px solid var(--border);
+    border: 1px solid var(--border);
     background: var(--card);
     width: 30px;
     height: 30px;
@@ -340,20 +362,19 @@
     margin-right: 10px;
     padding: 10px 18px;
     border-radius: 999px;
-    border: 2.5px solid var(--border);
+    border: 1px solid var(--accent);
     background: var(--accent);
     color: white;
     text-decoration: none;
     font-size: 0.875rem;
-    font-weight: 800;
-    box-shadow: 3px 3px 0 var(--border);
+    font-weight: 700;
   }
   .ai-badge {
     display: inline-block;
     font-size: 0.6875rem;
-    font-weight: 800;
-    color: white;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(91,61,246,0.1);
     padding: 4px 10px;
     border-radius: 999px;
     margin-bottom: 10px;
@@ -366,19 +387,18 @@
     margin-top: 18px;
     padding: 10px 18px;
     border-radius: 999px;
-    border: 2.5px solid var(--border);
+    border: 1px solid var(--border);
     background: var(--card);
     color: var(--text);
     font-size: 0.875rem;
-    font-weight: 800;
-    box-shadow: 3px 3px 0 var(--border);
+    font-weight: 700;
     cursor: pointer;
   }
   .modal-full-content {
     display: none;
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 2.5px dashed var(--border);
+    border-top: 1px solid var(--border);
   }
 </style>
 </head>
@@ -467,29 +487,10 @@ function categoryHue(category) {
   return hash;
 }
 
-function hslToRgb(h, s, l) {
-  s /= 100; l /= 100;
-  const k = n => (n + h / 30) % 12;
-  const a = s * Math.min(l, 1 - l);
-  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-  return [f(0) * 255, f(8) * 255, f(4) * 255];
-}
-
-function relativeLuminance([r, g, b]) {
-  const lin = v => {
-    v /= 255;
-    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-  };
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-}
-
 function categoryColors(category) {
   const hue = categoryHue(category || '');
-  const border = `hsl(${hue}, 80%, 52%)`;
-  const luminance = relativeLuminance(hslToRgb(hue, 80, 52));
   return {
-    border,
-    text: luminance > 0.4 ? '#14121a' : '#ffffff',
+    border: `hsl(${hue}, 70%, 48%)`,
   };
 }
 
@@ -502,7 +503,7 @@ function cardHtml(item, idx) {
         <span class="card-source">${escapeHtml(item.source)}${isNew ? '<span class="card-new">NEW</span>' : ''}</span>
         <span>${timeAgo(item.published_ts)}</span>
       </div>
-      <span class="category-tag" style="--cat-color:${c.border}; color:${c.text};">${escapeHtml(item.category)}</span>
+      <span class="category-tag"><span class="tag-dot" style="--cat-color:${c.border};"></span>${escapeHtml(item.category)}</span>
       <div class="card-title">${escapeHtml(item.title)}</div>
       ${item.ai_summary || item.summary ? `<div class="card-summary">${escapeHtml(item.ai_summary || item.summary)}</div>` : ''}
     </div>
