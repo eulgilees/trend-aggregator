@@ -185,6 +185,16 @@
     font-weight: 700;
     color: var(--text);
   }
+  .card.is-read, .banner-card.is-read {
+    opacity: 0.55;
+  }
+  .read-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin-right: 4px;
+  }
   .card-new {
     display: inline-block;
     font-size: 0.625rem;
@@ -497,14 +507,26 @@ function categoryColors(category) {
   };
 }
 
+const READ_KEY = 'trendReadLinks';
+function loadReadSet() {
+  try { return new Set(JSON.parse(localStorage.getItem(READ_KEY) || '[]')); } catch { return new Set(); }
+}
+function markRead(link) {
+  if (!link) return;
+  readSet.add(link);
+  localStorage.setItem(READ_KEY, JSON.stringify([...readSet].slice(-500)));
+}
+let readSet = loadReadSet();
+
 function cardHtml(item, idx) {
   const c = categoryColors(item.category);
   const isNew = (Math.floor(Date.now() / 1000) - item.published_ts) < 7200;
+  const isRead = item.link && readSet.has(item.link);
   return `
-    <div class="card" data-idx="${idx}" style="--cat-color:${c.border};">
+    <div class="card${isRead ? ' is-read' : ''}" data-idx="${idx}" style="--cat-color:${c.border};">
       <div class="card-meta">
         <span class="card-source">${escapeHtml(item.source)}${isNew ? '<span class="card-new">NEW</span>' : ''}</span>
-        <span>${timeAgo(item.published_ts)}</span>
+        <span>${isRead ? '<span class="read-badge">✓ 읽음</span> ' : ''}${timeAgo(item.published_ts)}</span>
       </div>
       <span class="category-tag"><span class="tag-dot" style="--cat-color:${c.border};"></span>${escapeHtml(item.category)}</span>
       <div class="card-title">${escapeHtml(item.title)}</div>
@@ -514,12 +536,14 @@ function cardHtml(item, idx) {
 }
 
 function bannerHtml(item, idx) {
+  const isRead = item.link && readSet.has(item.link);
   return `
-    <div class="banner-card" data-idx="${idx}">
+    <div class="banner-card${isRead ? ' is-read' : ''}" data-idx="${idx}">
       <span class="banner-tag">🔥 지금 뜨는 트렌드 PICK</span>
       <div class="banner-title">${escapeHtml(item.title)}</div>
       ${item.feature_reason ? `<div class="banner-reason">${escapeHtml(item.feature_reason)}</div>` : ''}
       <div class="banner-meta">
+        ${isRead ? '<span class="read-badge">✓ 읽음</span>' : ''}
         <span>${escapeHtml(item.source)}</span>
         <span>${timeAgo(item.published_ts)}</span>
       </div>
@@ -554,7 +578,14 @@ function renderItems(items) {
 
   grid.innerHTML = html;
   grid.querySelectorAll('.card, .banner-card').forEach(el => {
-    el.addEventListener('click', () => openModal(currentItems[+el.dataset.idx]));
+    el.addEventListener('click', () => {
+      const item = currentItems[+el.dataset.idx];
+      if (item.link && !readSet.has(item.link)) {
+        markRead(item.link);
+        renderItems(currentItems);
+      }
+      openModal(item);
+    });
   });
 }
 
