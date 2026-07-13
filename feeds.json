@@ -1,10 +1,13 @@
 [
-  {"name": "캐릿", "category": "트렌드/마케팅", "url": "https://kill-the-newsletter.com/feeds/jecqbnanw6pjip2bfsit.xml"},
-  {"name": "뉴닉", "category": "시사/뉴스", "url": "https://kill-the-newsletter.com/feeds/a8ff2v32moundl9mxmpa.xml"},
+  {"name": "캐릿", "category": "트렌드/마케팅", "url": "feedbin:3971433"},
+  {"name": "뉴닉", "category": "시사/뉴스", "url": "feedbin:3971431"},
   {"name": "아웃스탠딩", "category": "IT/스타트업", "url": "https://wp.outstanding.kr/rss"},
   {"name": "GeekNews", "category": "IT/기술", "url": "https://news.hada.io/rss/news"},
-  {"name": "트렌드라이트", "category": "트렌드/마케팅", "url": "https://kill-the-newsletter.com/feeds/5gofx00cqky35nlwhgiv.xml"},
-  {"name": "Trend A Word", "category": "트렌드/마케팅", "url": "https://kill-the-newsletter.com/feeds/8sd1016sfy78bd30xvg1.xml"},
-  {"name": "디에디트", "category": "라이프스타일", "url": "https://kill-the-newsletter.com/feeds/t55l43jvm7m8nli4mpxs.xml"},
-  {"name": "헤이팝레터", "category": "라이프스타일", "url": "https://kill-the-newsletter.com/feeds/s8lvwkc9wu5iaujlax7d.xml"}
+  {"name": "트렌드라이트", "category": "트렌드/마케팅", "url": "feedbin:3971434"},
+  {"name": "Trend A Word", "category": "트렌드/마케팅", "url": "feedbin:3971435"},
+  {"name": "디에디트", "category": "라이프스타일", "url": "feedbin:3971436"},
+  {"name": "헤이팝레터", "category": "라이프스타일", "url": "feedbin:3971437"},
+  {"name": "고구마팜", "category": "트렌드/마케팅", "url": "https://gogumafarm.kr/feed/"},
+  {"name": "디지털인사이트", "category": "트렌드/마케팅", "url": "feedbin:3971438"},
+  {"name": "대외비", "category": "트렌드/마케팅", "url": "feedbin:3971439"}
 ]

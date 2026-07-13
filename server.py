@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import base64
 import json
 import os
 import re
@@ -7,6 +8,7 @@ import threading
 import time
 import urllib.request
 from calendar import timegm
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 from urllib.parse import urlparse, parse_qs
@@ -23,6 +25,9 @@ PORT = int(os.environ.get('PORT', 8000))
 ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 ANTHROPIC_MODEL = 'claude-haiku-4-5-20251001'
 AI_SUMMARY_BATCH = 20  # 새로고침 1회당 최대 요약 생성 건수 (비용/속도 제어)
+
+FEEDBIN_EMAIL = os.environ.get('FEEDBIN_EMAIL', '')
+FEEDBIN_PASSWORD = os.environ.get('FEEDBIN_PASSWORD', '')
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
@@ -94,7 +99,60 @@ def entry_full_content(entry):
     return ''
 
 
+def feedbin_auth_header():
+    if not FEEDBIN_EMAIL or not FEEDBIN_PASSWORD:
+        raise RuntimeError('FEEDBIN_EMAIL/FEEDBIN_PASSWORD 환경변수가 설정되지 않음')
+    token = base64.b64encode(f'{FEEDBIN_EMAIL}:{FEEDBIN_PASSWORD}'.encode('utf-8')).decode('ascii')
+    return f'Basic {token}'
+
+
+def parse_feedbin_ts(value):
+    if not value:
+        return int(time.time())
+    for fmt in ('%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ'):
+        try:
+            return int(datetime.strptime(value, fmt).replace(tzinfo=timezone.utc).timestamp())
+        except ValueError:
+            continue
+    return int(time.time())
+
+
+def fetch_feedbin_entries(feed_id):
+    url = f'https://api.feedbin.com/v2/feeds/{feed_id}/entries.json?per_page=100'
+    req = urllib.request.Request(url, headers={'Authorization': feedbin_auth_header()})
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        return json.loads(resp.read().decode('utf-8'))
+
+
+def fetch_feed_feedbin(source):
+    feed_id = source['url'].split(':', 1)[1]
+    rows = []
+    for entry in fetch_feedbin_entries(feed_id):
+        title = entry.get('title')
+        link = entry.get('url') or f"feedbin://entry/{entry.get('id')}"
+        if not title:
+            continue
+        raw_summary = entry.get('summary', '') or ''
+        raw_content = entry.get('content', '') or ''
+        best_html = raw_content if len(strip_html(raw_content)) > len(strip_html(raw_summary)) else raw_summary
+        is_full = 1 if len(strip_html(best_html)) > FULL_CONTENT_THRESHOLD else 0
+        rows.append((
+            source['name'],
+            source['category'],
+            title,
+            link,
+            strip_html(raw_summary, limit=200),
+            sanitize_html(best_html),
+            is_full,
+            parse_feedbin_ts(entry.get('published')),
+            int(time.time()),
+        ))
+    return rows
+
+
 def fetch_feed(source):
+    if source['url'].startswith('feedbin:'):
+        return fetch_feed_feedbin(source)
     parsed = feedparser.parse(source['url'])
     rows = []
     for entry in parsed.entries:
